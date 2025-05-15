@@ -277,7 +277,13 @@
     gap: 16px;
   }
   
-  .filter-dropdown {
+  .dropdown-group {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .filter-dropdown,
+  .sort-dropdown {
     position: relative;
   }
   
@@ -290,7 +296,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    min-width: 220px;
+    min-width: 180px;
     border-radius: 100px;
     transition: all 0.3s;
   }
@@ -312,7 +318,8 @@
     transition: transform 0.3s;
   }
   
-  .filter-dropdown.active .dropdown-arrow {
+  .filter-dropdown.active .dropdown-arrow,
+  .sort-dropdown.active .dropdown-arrow {
     transform: rotate(180deg);
   }
   
@@ -323,7 +330,7 @@
     background-color: #44403c;
     border-radius: 16px;
     padding: 8px;
-    min-width: 220px;
+    min-width: 180px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     border: 1px solid #57534e;
@@ -363,6 +370,41 @@
     text-align: center;
   }
   
+  /* Toast Notifications */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    z-index: 1000;
+    animation: slideIn 0.3s ease-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .toast.success {
+    background-color: #16a34a;
+    color: white;
+  }
+  
+  .toast.error {
+    background-color: #ef4444;
+    color: white;
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
   @media (max-width: 1200px) {
     .header {
       flex-direction: column;
@@ -374,7 +416,13 @@
       width: 100%;
     }
     
-    .filter-dropdown {
+    .dropdown-group {
+      width: 100%;
+      flex-direction: column;
+    }
+    
+    .filter-dropdown,
+    .sort-dropdown {
       width: 100%;
     }
     
@@ -398,5 +446,266 @@
     .dropdown-item {
       padding: 16px;
       font-size: 1.8rem;
+    }
+
+    .toast {
+      left: 24px;
+      right: 24px;
+      text-align: center;
+    }
+  }
+  
+  /* Fact of the Day */
+  .fact-of-the-day {
+    background: linear-gradient(135deg, #44403c, #292524);
+    border-radius: 16px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #57534e;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.5s ease-out;
+  }
+  
+  .fact-of-the-day::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #ef4444, #16a34a, #eab308);
+  }
+  
+  .fact-of-the-day-content {
+    padding: 24px;
+  }
+  
+  .fact-of-the-day-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .fact-of-the-day-icon {
+    font-size: 2.4rem;
+  }
+  
+  .fact-of-the-day h2 {
+    font-size: 2.4rem;
+    font-family: 'Coiny', sans-serif;
+    color: #fafaf9;
+    margin: 0;
+  }
+  
+  .fact-of-the-day-text {
+    font-size: 2rem;
+    line-height: 1.4;
+    margin-bottom: 16px;
+    color: #fafaf9;
+  }
+  
+  .fact-of-the-day-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .close-fact {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #a8a29e;
+    font-size: 2.4rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 100px;
+    transition: all 0.2s;
+  }
+  
+  .close-fact:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fafaf9;
+  }
+  
+  @keyframes slideDown {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @media (max-width: 900px) {
+    .fact-of-the-day {
+      margin: 0 16px 32px;
+    }
+  
+    .fact-of-the-day-content {
+      padding: 16px;
+    }
+  
+    .fact-of-the-day h2 {
+      font-size: 2rem;
+    }
+  
+    .fact-of-the-day-text {
+      font-size: 1.8rem;
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-stats {
+    background-image: none;
+    background-color: #44403c;
+  }
+
+  .btn-stats:hover {
+    background-color: #57534e;
+  }
+
+  /* Fact Stats */
+  .fact-stats {
+    background: linear-gradient(135deg, #44403c, #292524);
+    border-radius: 16px;
+    margin-bottom: 40px;
+    padding: 24px;
+    border: 1px solid #57534e;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.5s ease-out;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .stats-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stats-card h3 {
+    font-size: 1.8rem;
+    color: #a8a29e;
+    margin-bottom: 12px;
+    font-family: 'Coiny', sans-serif;
+  }
+
+  .stats-number {
+    font-size: 3.6rem;
+    font-weight: 600;
+    color: #fafaf9;
+  }
+
+  .stats-text {
+    font-size: 1.6rem;
+    color: #fafaf9;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .stats-votes {
+    font-size: 1.4rem;
+    color: #a8a29e;
+  }
+
+  .category-stats {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .category-stats h3 {
+    font-size: 1.8rem;
+    color: #a8a29e;
+    margin-bottom: 20px;
+    font-family: 'Coiny', sans-serif;
+  }
+
+  .category-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .category-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .category-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .category-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .category-name {
+    font-size: 1.6rem;
+    color: #fafaf9;
+    text-transform: capitalize;
+    flex-grow: 1;
+  }
+
+  .category-count {
+    font-size: 1.4rem;
+    color: #a8a29e;
+  }
+
+  .bar-container {
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease-out;
+  }
+
+  @media (max-width: 900px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .fact-stats {
+      margin: 0 16px 32px;
+      padding: 16px;
+    }
+
+    .stats-card {
+      padding: 16px;
+    }
+
+    .stats-number {
+      font-size: 3rem;
+    }
+
+    .category-stats {
+      padding: 16px;
     }
   }
