@@ -94,6 +94,7 @@ function App() {
             setFacts={setFacts}
             voteFilter={voteFilter}
             sortBy={sortBy}
+            setToast={setToast}
           />
         )}
       </main>
@@ -347,7 +348,7 @@ function CategoryFilters({ setCurrentCategory }) {
   );
 }
 
-function FactList({ currentCategory, facts, setFacts, voteFilter, sortBy }) {
+function FactList({ currentCategory, facts, setFacts, voteFilter, sortBy, setToast }) {
   let filteredFacts =
     currentCategory === "all"
       ? facts
@@ -379,7 +380,12 @@ function FactList({ currentCategory, facts, setFacts, voteFilter, sortBy }) {
     <section>
       <ul className="facts-list">
         {filteredFacts.map((fact) => (
-          <Fact key={fact.id} fact={fact} setFacts={setFacts} />
+          <Fact 
+            key={fact.id} 
+            fact={fact} 
+            setFacts={setFacts} 
+            setToast={setToast}
+          />
         ))}
       </ul>
       <p>
@@ -389,8 +395,9 @@ function FactList({ currentCategory, facts, setFacts, voteFilter, sortBy }) {
   );
 }
 
-function Fact({ fact, setFacts }) {
+function Fact({ fact, setFacts, setToast }) {
   const [isUpdating, setIsUpdating] = useState(false);
+  const [showShareMenu, setShowShareMenu] = useState(false);
   const isDisputed =
     fact.votes_interesting + fact.votes_mindblowing < fact.votes_false;
 
@@ -414,45 +421,111 @@ function Fact({ fact, setFacts }) {
     }
   }
 
+  const handleShare = async (platform) => {
+    const shareText = `${fact.text} (Source: ${fact.source})`;
+    const shareUrl = encodeURIComponent(window.location.href);
+    const shareTitle = encodeURIComponent("Check out this interesting fact!");
+
+    switch (platform) {
+      case 'twitter':
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${shareUrl}`, '_blank');
+        break;
+      case 'facebook':
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}&quote=${encodeURIComponent(shareText)}`, '_blank');
+        break;
+      case 'linkedin':
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`, '_blank');
+        break;
+      case 'copy':
+        try {
+          await navigator.clipboard.writeText(shareText);
+          setToast({
+            type: "success",
+            message: "Fact copied to clipboard! 📋"
+          });
+        } catch (err) {
+          setToast({
+            type: "error",
+            message: "Failed to copy to clipboard"
+          });
+        }
+        break;
+    }
+    setShowShareMenu(false);
+  };
+
   return (
     <li className="fact">
       <p>
         {isDisputed && <span className="disputed">[⛔ DISPUTED]</span>}
         {fact.text}
+      </p>
+      <div className="fact-tags">
+        <span
+          className="tag"
+          style={{
+            backgroundColor: CATEGORIES.find((cat) => cat.name === fact.category)
+              ?.color,
+          }}
+        >
+          {fact.category}
+        </span>
         <a
-          className="source"
           href={fact.source}
           target="_blank"
           rel="noreferrer"
+          className="btn-source"
         >
-          (Source)
+          <span className="source-icon">🔗</span>
+          Visit Source
         </a>
-      </p>
-      <span
-        className="tag"
-        style={{
-          backgroundColor: CATEGORIES.find((cat) => cat.name === fact.category)
-            ?.color,
-        }}
-      >
-        {fact.category}
-      </span>
-      <div className="vote-buttons">
-        <button
-          onClick={() => handleVote("votes_interesting")}
-          disabled={isUpdating}
-        >
-          👍 {fact.votes_interesting}
-        </button>
-        <button
-          onClick={() => handleVote("votes_mindblowing")}
-          disabled={isUpdating}
-        >
-          🤯 {fact.votes_mindblowing}
-        </button>
-        <button onClick={() => handleVote("votes_false")} disabled={isUpdating}>
-          ⛔ {fact.votes_false}
-        </button>
+      </div>
+      <div className="fact-actions">
+        <div className="vote-buttons">
+          <button
+            onClick={() => handleVote("votes_interesting")}
+            disabled={isUpdating}
+          >
+            👍 {fact.votes_interesting}
+          </button>
+          <button
+            onClick={() => handleVote("votes_mindblowing")}
+            disabled={isUpdating}
+          >
+            🤯 {fact.votes_mindblowing}
+          </button>
+          <button onClick={() => handleVote("votes_false")} disabled={isUpdating}>
+            ⛔ {fact.votes_false}
+          </button>
+        </div>
+        <div className="share-container">
+          <button 
+            className="btn-share"
+            onClick={() => setShowShareMenu(!showShareMenu)}
+          >
+            📤 Share
+          </button>
+          {showShareMenu && (
+            <div className="share-menu">
+              <button onClick={() => handleShare('twitter')}>
+                <span className="share-icon">𝕏</span>
+                Twitter
+              </button>
+              <button onClick={() => handleShare('facebook')}>
+                <span className="share-icon">f</span>
+                Facebook
+              </button>
+              <button onClick={() => handleShare('linkedin')}>
+                <span className="share-icon">in</span>
+                LinkedIn
+              </button>
+              <button onClick={() => handleShare('copy')}>
+                <span className="share-icon">📋</span>
+                Copy Link
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </li>
   );
